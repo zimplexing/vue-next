@@ -25,7 +25,7 @@ export function createInstance<T extends Component>(
   return createComponentInstance(h(Class, props)).$proxy as any
 }
 
-export function renderIntsance<T extends Component>(
+export function renderInstance<T extends Component>(
   Class: new () => T,
   props?: any
 ): T {

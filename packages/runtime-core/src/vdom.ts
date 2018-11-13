@@ -37,6 +37,8 @@ export interface VNode {
   // only on mounted component nodes
   // points to the parent stateful/functional component's placeholder node
   contextVNode: VNode | null
+  // only on cloned vnodes, points to the original cloned vnode
+  clonedFrom: VNode | null
 }
 
 export interface MountedVNode extends VNode {
@@ -92,7 +94,8 @@ export function createVNode(
     slots: slots === void 0 ? null : slots,
     el: null,
     parentVNode: null,
-    contextVNode: null
+    contextVNode: null,
+    clonedFrom: null
   }
   if (childFlags === ChildrenFlags.UNKNOWN_CHILDREN) {
     normalizeChildren(vnode, children)
@@ -328,7 +331,7 @@ export function cloneVNode(vnode: VNode, extraData?: VNodeData): VNode {
         }
       }
     }
-    return createVNode(
+    const cloned = createVNode(
       flags,
       vnode.tag,
       clonedData,
@@ -338,6 +341,8 @@ export function cloneVNode(vnode: VNode, extraData?: VNodeData): VNode {
       vnode.ref,
       vnode.slots
     )
+    cloned.clonedFrom = vnode.clonedFrom || vnode
+    return cloned
   } else if (flags & VNodeFlags.TEXT) {
     return createTextVNode(vnode.children as string)
   } else {
