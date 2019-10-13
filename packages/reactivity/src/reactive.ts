@@ -108,6 +108,7 @@ function createReactiveObject(
   observed = new Proxy(target, handlers)
   toProxy.set(target, observed)
   toRaw.set(observed, target)
+  // 这个targetMap用于收集该对象的依赖
   if (!targetMap.has(target)) {
     targetMap.set(target, new Map())
   }
